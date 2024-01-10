@@ -128,3 +128,74 @@ type TextInputProps = Omit<
   'onChange'
 >;
 ```
+
+### Allowing custom styling
+
+#### custom styling of input field by tapping into className prop.
+
+There are many ways we can do this. One way is to introduce specific prop variables, such as `inputBackgroundColor`, `textColor` etc, but this is quite limiting and requires lot of typing. Also sometimes it makes sense to introduce variables, for example in the case of a Button component, we might have different types of buttons -primary, secondary, tertiary, etc, and depending on the type we can set different styles internally in our implementation. But for our TextInput, ability to pass custom styles in the form of css classes is much more elegant. Inline styles are also possible,
+which are bit discouraged and we can omit the style prop altogether by omitting it in our prop type.
+
+```
+type TextInputProps = Omit<
+  ComponentProps<'input'> & {
+    id?: string;
+    label: string;
+    error: string;
+    type: string;
+    className?: string;
+    /**
+     * better abstraction, we get the text that is entered directly than the low level event
+     */
+    handleChange: (text: string) => void;
+  },
+  'onChange'
+>;
+
+```
+
+Now we could use the `className` string that consists of custom classes to be added. We shall augment that with our basic styling of input like this:
+
+```
+  <input
+        {...delegated} // We want to ignore any onChange, so delegate props must be passed first
+        type={isValidType ? type : 'text'}
+        id={actualId}
+        className={`block border border-solid  text-base mt-2 py-1 px-1 ${className}`}
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+          handleChange(event.target.value);
+        }}
+      ></input>
+```
+
+But this is not going to work correctly when we use Tailwind css. There we need to do [some special work](https://www.youtube.com/watch?v=re2JFITR7TI).
+Basically we need to install these two packages clsx and tailwind-merge
+
+```
+npm install clsx tailwind-merge
+```
+
+```
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+ // Should use this utility function to merge all classes
+ // so that they are applied in the order of their presence.
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+```
+
+By using the above function cn, we can now accommodate custom styling
+
+```
+<input
+        {...delegated} // We want to ignore any onChange, so delegate props must be passed first
+        type={isValidType ? type : 'text'}
+        id={actualId}
+        className={cn(`block border border-solid  text-base mt-2 py-1 px-1`, className)}
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+          handleChange(event.target.value);
+        }}
+      ></input>
+```

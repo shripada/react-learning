@@ -1,7 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { ComponentProps } from 'react';
-import { HandleChange } from './TextInput.stories';
-
+import { cn } from '../utils';
 /**
  * Props that the TextInput component accepts. We compose our type by taking help of type helper
  * ComponentProps of React. This helps us to get the type of the underlying DOM element- input
