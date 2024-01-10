@@ -105,3 +105,9 @@ function TextInput(...){
 }
 
 ```
+
+But this implementation, does allow some one passing onChange even though it is ignored. This is not a good thing, can we enforce the typesystem to completely disallow this? The answer is yes!.
+
+#### disallowing the default onChange in preference to handleChange
+
+Thanks to the Typescript, we can tweak our prop type to disallow the `onChange`
