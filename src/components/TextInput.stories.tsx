@@ -40,6 +40,7 @@ export const HandleChange: Story = {
     defaultValue: 'CodeCraft Technologies',
     handleChange: (text: string) => console.log(text),
     // This will be simply ignored!
-    onChange: (e: ChangeEvent<HTMLInputElement>) => console.log(e),
+    className: `text-red-600 pl-4`,
+    disabled: true,
   },
 };

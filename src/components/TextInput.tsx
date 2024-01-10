@@ -12,6 +12,7 @@ type TextInputProps = Omit<
     label: string;
     error: string;
     type: string;
+    className?: string;
     /**
      * better abstraction, we get the text that is entered directly than the low level event
      */
@@ -31,6 +32,7 @@ export function TextInput({
   label,
   type, //we have pulled out the type here to ensure, we handle it correctly. ...delegated won't have it and thus no fear of getting overriden with an unwanted value such as checkbox.
   error,
+  className,
   handleChange,
   ...delegated
 }: TextInputProps) {
@@ -48,7 +50,10 @@ export function TextInput({
         {...delegated} // We want to ignore any onChange, so delegate props must be passed first
         type={isValidType ? type : 'text'}
         id={actualId}
-        className={`block border border-solid  text-base mt-2 py-1 px-1`}
+        className={cn(
+          `disabled:opacity-65 block border border-solid  text-base mt-2 py-1 px-1`,
+          className
+        )}
         onChange={(event: ChangeEvent<HTMLInputElement>) => {
           handleChange(event.target.value);
         }}
