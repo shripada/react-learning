@@ -42,4 +42,29 @@ In our case, ours in text input. So chance is that user might want to use this i
  }
 ```
 
+How do we solve this? The simple trick is simply pull out the 'type' prop out from delegated props, and give special treatment to it.
+
+```
+ function TextInput({label, error, type ...delegated}: TextInputProps){
+  const validTypes = ['text', 'number', 'password'];
+  const isValidType = validTypes.includes(type);
+  const inputType = isValidType ? type : 'text' // Fallback to text, in case we receive invalid type
+    <input {...delegated} type={inputType}>
+    ...
+ }
+```
+
 So this tradeoff of which position we need to destructure is totally dependent on our context. In the case of this TextInput component it sounds like that is the right choice!. But imagine if it were a checkbox type. Probably we never want someone to override that, and there we would prefer passing delegated props first and then overide the type to always have value 'chekbox'
+
+```
+// no need of explit type prop here, as it is always checkbox
+function CheckBox({label,...delegated}: TextInputProps){
+
+    // this is correct
+    <input {...delegated} type={"checkbox"}>
+    ...
+    // this is dangerous as someone can override the type to something else and
+    // since we are passing delegated at end 'checkbox' can be overridden to something else.
+    <input type={"checkbox"} {...delegated} >
+ }
+```
