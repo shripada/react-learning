@@ -68,3 +68,11 @@ function CheckBox({label,...delegated}: TextInputProps){
     <input type={"checkbox"} {...delegated} >
  }
 ```
+
+### Levels of abstraction
+
+For the user's of our TextInput, may onChange is quit a low level API to use to get the text that was typed. May be we actually provide a callback `handleChange` that will extract the text from the event and
+pass that instead of the low level event itself.
+
+Once we bring in this, do we need to disallow the low level `onChange`? This is a tradeoff. We can allow both, or disallow `onChange`. Or look for onChange, only if the `handleChange` is missing.
+Lets examine each of this

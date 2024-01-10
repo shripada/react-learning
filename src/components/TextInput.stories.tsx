@@ -33,3 +33,11 @@ export const Password: Story = {
     onChange: (e: ChangeEvent<HTMLInputElement>) => console.log(e.target.value),
   },
 };
+
+export const HandleChange: Story = {
+  args: {
+    label: 'Company name',
+    defaultValue: 'CodeCraft Technologies',
+    handleChange: (text: string) => console.log(text),
+  },
+};

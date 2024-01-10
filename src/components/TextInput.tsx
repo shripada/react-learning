@@ -1,5 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { ComponentProps } from 'react';
+import { HandleChange } from './TextInput.stories';
 
 /**
  * Props that the TextInput component accepts. We compose our type by taking help of type helper
@@ -11,6 +12,10 @@ type TextInputProps = ComponentProps<'input'> & {
   label: string;
   error: string;
   type: string;
+  /**
+   * better abstraction, we get the text that is entered directly than the low level event
+   */
+  handleChange: (text: string) => void;
 };
 /**
  * We need to be able to associate a label with our text input. Also if there is an error
@@ -23,6 +28,7 @@ export function TextInput({
   label,
   type, //we have pulled out the type here to ensure, we handle it correctly. ...delegated won't have it and thus no fear of getting overriden with an unwanted value such as checkbox.
   error,
+  handleChange,
   ...delegated
 }: TextInputProps) {
   let actualId = React.useId();
@@ -36,10 +42,13 @@ export function TextInput({
         {label}
       </label>
       <input
-        {...delegated} //Putting delegated props here or to the end, has no difference in our case as there are no conflicts
+        {...delegated} // We want to ignore any onChange, so delegate props must be passed first
         type={isValidType ? type : 'text'}
         id={actualId}
-        className={`block border border-solid  text-xl mt-2`}
+        className={`block border border-solid  text-base mt-2 py-1 px-1`}
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+          handleChange(event.target.value);
+        }}
       ></input>
       {error ? <div className="text-red-600">{error}</div> : null}
     </>
