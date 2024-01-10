@@ -111,7 +111,7 @@ But this implementation, does allow some one passing onChange even though it is 
 #### disallowing the default onChange in preference to handleChange
 
 Thanks to the Typescript, we can tweak our prop type to disallow the `onChange`.
-We will use `Omit`` type helper of typescript
+We will use `Omit`` type helper of Typescript
 
 ```
 type TextInputProps = Omit<
