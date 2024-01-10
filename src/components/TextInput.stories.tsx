@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { TextInput } from './TextInput';
+import { ChangeEvent } from 'react';
 
 const meta: Meta<typeof TextInput> = {
   title: 'Custom/TextInput',
@@ -20,5 +21,15 @@ export const WithError: Story = {
   args: {
     label: 'User name',
     error: 'Can not be empty!',
+    defaultValue: 'a user value',
+    type: 'checkbox',
+  },
+};
+
+export const Password: Story = {
+  args: {
+    label: 'Password',
+    type: 'password',
+    onChange: (e: ChangeEvent<HTMLInputElement>) => console.log(e.target.value),
   },
 };
