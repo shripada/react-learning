@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { TextInput } from './TextInput';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, ComponentProps } from 'react';
 
 const meta: Meta<typeof TextInput> = {
   title: 'Custom/TextInput',
@@ -39,5 +39,7 @@ export const HandleChange: Story = {
     label: 'Company name',
     defaultValue: 'CodeCraft Technologies',
     handleChange: (text: string) => console.log(text),
+    // This will be simply ignored!
+    onChange: (e: ChangeEvent<HTMLInputElement>) => console.log(e),
   },
 };
