@@ -75,4 +75,33 @@ For the user's of our TextInput, may onChange is quit a low level API to use to 
 pass that instead of the low level event itself.
 
 Once we bring in this, do we need to disallow the low level `onChange`? This is a tradeoff. We can allow both, or disallow `onChange`. Or look for onChange, only if the `handleChange` is missing.
-Lets examine each of this
+
+#### overriding onChange with handleChange
+
+```
+type TextInputProps = ComponentProps<'input'> & {
+  id?: string;
+  label: string;
+  error: string;
+  type: string;
+  /**
+   * better abstraction, we get the text that is entered directly than the low level event
+   */
+  handleChange: (text: string) => void;
+};
+
+function TextInput(...){
+
+    ...
+     <input
+        {...delegated} // We want to ignore any onChange, so delegate props must be passed first
+        type={isValidType ? type : 'text'}
+        id={actualId}
+        className={`block border border-solid  text-base mt-2 py-1 px-1`}
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+          handleChange(event.target.value);
+        }}
+    ...
+}
+
+```
