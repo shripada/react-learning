@@ -7,16 +7,20 @@ import { HandleChange } from './TextInput.stories';
  * ComponentProps of React. This helps us to get the type of the underlying DOM element- input
  */
 
-type TextInputProps = ComponentProps<'input'> & {
-  id?: string;
-  label: string;
-  error: string;
-  type: string;
-  /**
-   * better abstraction, we get the text that is entered directly than the low level event
-   */
-  handleChange: (text: string) => void;
-};
+type TextInputProps = Omit<
+  ComponentProps<'input'> & {
+    id?: string;
+    label: string;
+    error: string;
+    type: string;
+    /**
+     * better abstraction, we get the text that is entered directly than the low level event
+     */
+    handleChange: (text: string) => void;
+  },
+  'onChange'
+>; // Want everything from 'input' but not onChange
+
 /**
  * We need to be able to associate a label with our text input. Also if there is an error
  * that we might want to display below the input field. This component tries to achieve this
