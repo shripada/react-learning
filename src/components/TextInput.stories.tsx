@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { TextInput } from './TextInput';
 import { ChangeEvent, ComponentProps } from 'react';
+import React from 'react';
 
 const meta: Meta<typeof TextInput> = {
   title: 'Custom/TextInput',
@@ -42,5 +43,43 @@ export const HandleChange: Story = {
     // This will be simply ignored!
     className: `text-red-600 pl-4`,
     disabled: true,
+  },
+};
+
+export const Form: Story = {
+  render: () => {
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    React.useEffect(() => {
+      inputRef?.current?.focus();
+    });
+
+    const anotherTextInput = React.createElement(TextInput, {
+      ref: inputRef,
+      label: 'some label',
+      type: 'text',
+      handleChange: (text: string) => console.log(text),
+    });
+    console.log(anotherTextInput);
+
+    return (
+      <form>
+        <TextInput
+          ref={inputRef}
+          label="Username"
+          type="text"
+          handleChange={(text: string) => {
+            console.log(text);
+          }}
+        />
+
+        <TextInput
+          label="Password"
+          type="password"
+          handleChange={(text) => {
+            console.log(text);
+          }}
+        />
+      </form>
+    );
   },
 };

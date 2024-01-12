@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, ForwardedRef, MutableRefObject } from 'react';
 import { ComponentProps } from 'react';
 import { cn } from '../utils';
 /**
@@ -10,7 +10,7 @@ type TextInputProps = Omit<
   ComponentProps<'input'> & {
     id?: string;
     label: string;
-    error: string;
+    error?: string;
     type: string;
     className?: string;
     /**
@@ -21,32 +21,39 @@ type TextInputProps = Omit<
   'onChange'
 >; // Want everything from 'input' but not onChange
 
+type ForwardRefProps = TextInputProps & ForwardedRef<HTMLInputElement | null>;
+
 /**
  * We need to be able to associate a label with our text input. Also if there is an error
  * that we might want to display below the input field. This component tries to achieve this
  * by wrapping a  standard input element and then, adding a label and then error display below the
  * input element. This is an uncontrolled component.
  */
-export function TextInput({
-  id,
-  label,
-  type, //we have pulled out the type here to ensure, we handle it correctly. ...delegated won't have it and thus no fear of getting overriden with an unwanted value such as checkbox.
-  error,
-  className,
-  handleChange,
-  ...delegated
-}: TextInputProps) {
+function TextInputInternal(
+  {
+    id,
+    label,
+    type, //we have pulled out the type here to ensure, we handle it correctly. ...delegated won't have it and thus no fear of getting overriden with an unwanted value such as checkbox.
+    error,
+    className,
+    handleChange,
+    ...delegated
+  }: TextInputProps,
+  inputRef: ForwardedRef<HTMLInputElement | null>
+) {
   let actualId = React.useId();
   actualId = id ?? actualId;
   // We dont want accidental overrides of type to something meaningless to our context
   const validTypes = ['text', 'number', 'password'];
   const isValidType = validTypes.includes(type);
+
   return (
     <>
       <label htmlFor={actualId} className="text-blue-600">
         {label}
       </label>
       <input
+        ref={inputRef}
         {...delegated} // We want to ignore any onChange, so delegate props must be passed first
         type={isValidType ? type : 'text'}
         id={actualId}
@@ -62,3 +69,9 @@ export function TextInput({
     </>
   );
 }
+
+const TextInput = React.forwardRef<HTMLInputElement, ForwardRefProps>(
+  TextInputInternal
+);
+
+export { TextInput };
