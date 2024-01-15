@@ -1,5 +1,5 @@
 import React, { ChangeEvent, ForwardedRef, MutableRefObject } from 'react';
-import { ComponentProps } from 'react';
+import { ComponentProps, useImperativeHandle } from 'react';
 import { cn } from '../utils';
 /**
  * Props that the TextInput component accepts. We compose our type by taking help of type helper
@@ -39,9 +39,17 @@ function TextInputInternal(
     handleChange,
     ...delegated
   }: TextInputProps,
-  inputRef: ForwardedRef<HTMLInputElement | null>
+  ref: ForwardedRef<{ focus: () => void } | null>
 ) {
   let actualId = React.useId();
+  const [focused, setFocused] = React.useState(false);
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      inputRef?.current?.focus();
+      setFocused(true);
+    },
+  }));
   actualId = id ?? actualId;
   // We dont want accidental overrides of type to something meaningless to our context
   const validTypes = ['text', 'number', 'password'];
@@ -49,7 +57,10 @@ function TextInputInternal(
 
   return (
     <>
-      <label htmlFor={actualId} className="text-blue-600">
+      <label
+        htmlFor={actualId}
+        className={cn('text-blue-600', focused ? 'text-red-800' : null)}
+      >
         {label}
       </label>
       <input
@@ -70,8 +81,6 @@ function TextInputInternal(
   );
 }
 
-const TextInput = React.forwardRef<HTMLInputElement, ForwardRefProps>(
-  TextInputInternal
-);
+const TextInput = React.forwardRef(TextInputInternal);
 
 export { TextInput };

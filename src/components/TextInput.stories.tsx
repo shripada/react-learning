@@ -48,9 +48,10 @@ export const HandleChange: Story = {
 
 export const Form: Story = {
   render: () => {
-    const inputRef = React.useRef<HTMLInputElement>(null);
+    const inputRef = React.useRef<{ focus: () => void }>(null);
     React.useEffect(() => {
-      inputRef?.current?.focus();
+      // inputRef?.current?.focus();
+      inputRef.current?.focus();
     });
 
     const anotherTextInput = React.createElement(TextInput, {
